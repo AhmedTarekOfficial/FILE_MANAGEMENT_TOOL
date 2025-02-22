@@ -1,0 +1,157 @@
+#!/bin/bash
+
+
+# this section for manpluating file
+# that includes 
+
+
+#creating file function 
+
+
+filemanagementsystemmenu(){
+
+	printf "Hello in the file management tool what do you want to do in your files today\n1-create file\n2-delete files "
+
+	read userchoice
+
+	if [[ "$userchoice" == "1" ]]; then
+		createfile
+
+	else
+		deletefile
+	fi
+
+
+}
+
+createfile(){
+clear
+echo "please enter the file name : "
+read filename  
+clear
+echo "please enter the file fileextentionn : " 
+read fileextention
+clear 
+echo "where you want to place the file ?"
+echo "1-display the current working directory files / sub directory  ? " 
+echo "2-display the previous directory files / sub directory ? " 
+read userchoice 
+if [ $userchoice == '1' ] ; then 
+ls 
+printf "(1)is there any directory you want to place your file on?\n\n(2)or you want to create it withoud be included in any directory ? " 
+read choice 
+if [ $choice == "1" ] ; then 
+echo " which one  :  " 
+read directorychoice 
+touch ./$directorychoice/$filename.$fileextention 
+else 
+touch $filename.$fileextention  
+fi  
+fi  
+
+if [ $userchoice == '2' ]; then
+	ls ../
+	printf "(1)is there any directory you want to place your file on?\n\n(2)or you want to create it withoud be included in any directory ? " 
+	read usersecondchoice
+	if [ $usersecondchoice == "1" ]; then 
+		printf "please enter the directory name you want to place the file in : " 
+		read directorychoice 
+		for dir in ../*/; do 
+         primarynamefile=$(basename "$dir") 
+         if [ "$primarynamefile" = "$directorychoice" ]; then 
+            touch "../$directorychoice/$filename.$fileextention"
+            printf "Done creating file\n"
+            break
+	     fi 
+	 done
+		
+	else
+		touch ../$filename.$fileextention
+		clear
+		printf "done create file out of any directory\n"
+
+	fi  
+fi  
+
+}
+
+deletefile() {
+# while [[ true ]]; do
+	clear 
+		 printf "where the file you want to delete it from your device ? \n"
+		 echo "1- in this current directory"
+		 echo "2-in the parent of this directory"
+		 echo "3- in another directory "
+
+		 read userchoice 
+		 if [[ "$userchoice" == "1"  ]]; then
+			 clear 
+			ls 
+			echo "enter file name : "
+			read filename
+			clear 
+			echo "enter file fileextention : "
+			read fileextention
+			for file in *; do  
+	    	 if [[ -f "$file" ]]; then  
+	             if [[ "$file" == "$filename"."$fileextention" ]]; then
+	                  rm "$file"
+	                  echo "done deleting the file"
+	                  break ; 
+	           fi  fi
+	       done
+	   elif [[ "$userchoice" == "2"  ]]; then
+	        	clear
+	        	ls ../
+	        	echo "please enter the name of the file you want to delete it from this directory "
+
+	        	read filename
+	        	clear 
+	        	echo "enter the extention of the file "
+	        	read fileextention
+	        	for file in ../*; do  
+	        		basefilename="$(basename "$file" .${file##*.})"
+	        	   
+	    	 		if [[ -f "$file" ]]; then  
+	         		 if [ "$basefilename.$extension" == "$filename.$fileextention"  ]; then
+	             		 rm "$file"
+	             		 echo "done deleting the file"
+	             		 break ; 
+	            	    fi
+
+	                fi 
+	           done
+
+	      elif [[ "$userchoice" == "3"  ]]; then
+
+	      		echo "please enter the path of the directory you want to delete the file from it "
+	      		read userpath
+
+	      			 
+	    			  
+	      			echo "please enter name of the file you want to delete it "
+	    			 	read filename
+	    			 	echo "please enter the file extension"
+	    			 	read fileextention
+	    				for file in ../"$userpath"/*; do  
+	    					echo "$file"
+	        			 basefilename="$(basename "$file" .${file##*.})"
+	        			 extension="${file##*.}"
+	    	 		 	 if [[ -f "$file" ]]; then  
+	         		 	 if [ "$basefilename.$extension" == "$filename.$fileextention"  ]; then
+	             		     rm "$file"
+	             		     echo "done deleting the file"
+	             		     break ; 
+	            	      fi
+	            	  fi 	
+	              done  	
+
+	fi  
+	sleep 1
+# done
+
+}   
+
+
+
+filemanagementsystemmenu
